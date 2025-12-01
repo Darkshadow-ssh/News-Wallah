@@ -32,9 +32,10 @@ function NewsItems({ article, queryParam }: NewsItemProps) {
     } else if (queryParam.startsWith("q=")) {
         cleanParam = queryParam.substring(2);
     }
+    const sourcename = `/${cleanParam}/${article.source.name}`;
     return (
         <div>
-            <Link href={`/${cleanParam}/${article.source.name.split('?')[0]}`}>
+            <Link href={sourcename.split('?')[0]}>
                 <article className="overflow-hidden rounded-lg shadow-sm transition hover:shadow-lg dark:shadow-gray-700/25">
                     <Image
                         alt={article.title || "News article image"}
