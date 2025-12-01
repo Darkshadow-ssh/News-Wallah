@@ -32,24 +32,24 @@ interface NamePageProps {
 const getArticles = cache(async (category: string, searchQuery?: string): Promise<NewsArticle[]> => {
   try {
     let queryParam = "";
-    
+
     if (searchQuery) {
       queryParam = `q=${encodeURIComponent(searchQuery)}`;
     } else {
       queryParam = `category=${category}`;
     }
-    
+
     const res = await fetch(
       `https://newsapi.org/v2/top-headlines?${queryParam}&apiKey=${process.env.NEWS_API}`,
       { cache: "no-store" }
     );
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch: ${res.status}`);
     }
-    
+
     const data = await res.json();
-    
+
     if (Array.isArray(data)) {
       return data;
     } else if (data?.articles && Array.isArray(data.articles)) {
@@ -57,7 +57,7 @@ const getArticles = cache(async (category: string, searchQuery?: string): Promis
     } else if (data?.data && Array.isArray(data.data)) {
       return data.data;
     }
-    
+
     return [];
   } catch (error) {
     console.error("Error fetching articles:", error);
@@ -67,8 +67,8 @@ const getArticles = cache(async (category: string, searchQuery?: string): Promis
 
 export async function generateStaticParams() {
   const articles = await getArticles("general");
-  const uniqueSources = [...new Set(articles.map(article => article.source.name))];
-  
+  const uniqueSources = [...new Set(articles.map(article => article.source.name.split('?')[0]))];
+
   return uniqueSources.map((name) => ({
     name: encodeURIComponent(name),
   }));
@@ -79,16 +79,16 @@ export async function generateMetadata({ params, searchParams }: NamePageProps) 
   const resolvedSearch = await searchParams;
   const newname = decodeURIComponent(resolvedParams.name);
   const category = decodeURIComponent(resolvedParams.news);
-  
+
   const articles = await getArticles(category, resolvedSearch.q);
   const article = articles.find(a => a.source.name === newname);
-  
+
   if (!article) {
     return {
       title: 'Article Not Found',
     };
   }
-  
+
   return {
     title: article.title,
     description: article.description,
@@ -105,20 +105,20 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
   const resolvedSearch = await searchParams;
   const newname = decodeURIComponent(resolvedParams.name);
   const category = decodeURIComponent(resolvedParams.news);
-  
+
   const articles = await getArticles(category, resolvedSearch.q);
-  
+
   if (!Array.isArray(articles)) {
     console.error("Expected array but got:", typeof articles);
     notFound();
   }
-  
+
   const data = articles.find(article => article.source.name === newname);
-  
+
   if (!data) {
     notFound();
   }
-  
+
   return (
     <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0">
       <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
@@ -148,7 +148,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
       </div>
 
       <article className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10">
-     
+
         <header className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
           <div className="lg:pr-4">
             <div className="lg:max-w-lg">
@@ -173,7 +173,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
             src={data.urlToImage || "/default.jpg"}
             width={1216}
             height={800}
-            priority 
+            priority
             className="w-228 max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10"
             sizes="(max-width: 1024px) 100vw, 57rem"
             placeholder="blur"
@@ -219,10 +219,10 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
               </ul>
 
               <p className="mt-8">
-                <a 
-                  href={data.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href={data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
                 >
                   Read full article <span aria-hidden="true">→</span>

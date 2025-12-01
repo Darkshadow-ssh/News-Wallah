@@ -36,7 +36,7 @@ function NewsItems({ article, queryParam }: NewsItemProps) {
     const sourcename = `/${cleanParam}/${encodeURIComponent(cleanSourceName)}`;
     return (
         <div>
-            <Link href={sourcename.split('?')[0]}>
+            <Link href={sourcename}>
                 <article className="overflow-hidden rounded-lg shadow-sm transition hover:shadow-lg dark:shadow-gray-700/25">
                     <Image
                         alt={article.title || "News article image"}
