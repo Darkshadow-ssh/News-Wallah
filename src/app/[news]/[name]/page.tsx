@@ -77,7 +77,7 @@ export async function generateMetadata({ params, searchParams }: NamePageProps) 
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
   const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
-  const category = decodeURIComponent(resolvedParams.news);
+  const category = decodeURIComponent(resolvedParams.news.split('?')[0]);
 
   const articles = await getArticles(category, resolvedSearch.q);
   const article = articles.find(a => a.source.name === newname);
@@ -103,7 +103,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
   const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
-  const category = decodeURIComponent(resolvedParams.news);
+  const category = decodeURIComponent(resolvedParams.news.split('?')[0]);
 
   const articles = await getArticles(category, resolvedSearch.q);
 
