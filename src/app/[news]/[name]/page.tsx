@@ -102,9 +102,8 @@ export async function generateMetadata({ params, searchParams }: NamePageProps) 
 export default async function NewsContent({ params, searchParams }: NamePageProps) {
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
-  const newname = decodeURIComponent(resolvedParams.name);
+  const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
   const category = decodeURIComponent(resolvedParams.news);
-  const fixbug = newname.split('?')[0]
 
   const articles = await getArticles(category, resolvedSearch.q);
 
@@ -113,7 +112,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
     notFound();
   }
 
-  const data = articles.find(article => article.source.name === fixbug);
+  const data = articles.find(article => article.source.name === newname);
 
   if (!data) {
     notFound();
