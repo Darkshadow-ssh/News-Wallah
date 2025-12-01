@@ -32,7 +32,8 @@ function NewsItems({ article, queryParam }: NewsItemProps) {
     } else if (queryParam.startsWith("q=")) {
         cleanParam = queryParam.substring(2);
     }
-    const sourcename = `/${cleanParam}/${article.source.name}`;
+    const cleanSourceName = article.source.name.split('?')[0];
+    const sourcename = `/${cleanParam}/${encodeURIComponent(cleanSourceName)}`;
     return (
         <div>
             <Link href={sourcename.split('?')[0]}>
