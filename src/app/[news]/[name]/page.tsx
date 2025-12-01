@@ -76,7 +76,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params, searchParams }: NamePageProps) {
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
-  const newname = decodeURIComponent(resolvedParams.name);
+  const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
   const category = decodeURIComponent(resolvedParams.news);
 
   const articles = await getArticles(category, resolvedSearch.q);
