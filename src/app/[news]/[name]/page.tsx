@@ -67,7 +67,7 @@ const getArticles = cache(async (category: string, searchQuery?: string): Promis
 
 export async function generateStaticParams() {
   const articles = await getArticles("general");
-  const uniqueSources = [...new Set(articles.map(article => article.source.name.split('?')[0]))];
+  const uniqueSources = [...new Set(articles.map(article => article.source.name))];
   return uniqueSources.map((name) => ({
     name: encodeURIComponent(name),
   }));
@@ -104,6 +104,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
   const resolvedSearch = await searchParams;
   const newname = decodeURIComponent(resolvedParams.name);
   const category = decodeURIComponent(resolvedParams.news);
+  const fixbug = newname.split('?')[0]
 
   const articles = await getArticles(category, resolvedSearch.q);
 
@@ -112,7 +113,7 @@ export default async function NewsContent({ params, searchParams }: NamePageProp
     notFound();
   }
 
-  const data = articles.find(article => article.source.name === newname);
+  const data = articles.find(article => article.source.name === fixbug);
 
   if (!data) {
     notFound();
