@@ -68,7 +68,6 @@ const getArticles = cache(async (category: string, searchQuery?: string): Promis
 export async function generateStaticParams() {
   const articles = await getArticles("general");
   const uniqueSources = [...new Set(articles.map(article => article.source.name.split('?')[0]))];
-
   return uniqueSources.map((name) => ({
     name: encodeURIComponent(name),
   }));
