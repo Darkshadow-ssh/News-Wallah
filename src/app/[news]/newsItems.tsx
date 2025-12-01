@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
@@ -80,6 +79,6 @@ export default memo(NewsItems, (prevProps, nextProps) => {
     return (
         prevProps.article.title === nextProps.article.title &&
         prevProps.article.publishedAt === nextProps.article.publishedAt &&
-        prevProps.queryParam === nextProps.queryParam
+        prevProps.queryParam.split('?')[0] === nextProps.queryParam.split('?')[0]
     );
 });

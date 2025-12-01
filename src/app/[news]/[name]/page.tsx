@@ -76,8 +76,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params, searchParams }: NamePageProps) {
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
-  const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
-  const category = decodeURIComponent(resolvedParams.news.split('?')[0]);
+  const newname = decodeURIComponent(resolvedParams.name);
+  const category = decodeURIComponent(resolvedParams.news);
 
   const articles = await getArticles(category, resolvedSearch.q);
   const article = articles.find(a => a.source.name === newname);
@@ -102,8 +102,8 @@ export async function generateMetadata({ params, searchParams }: NamePageProps) 
 export default async function NewsContent({ params, searchParams }: NamePageProps) {
   const resolvedParams = await params;
   const resolvedSearch = await searchParams;
-  const newname = decodeURIComponent(resolvedParams.name.split('?')[0]);
-  const category = decodeURIComponent(resolvedParams.news.split('?')[0]);
+  const newname = decodeURIComponent(resolvedParams.name);
+  const category = decodeURIComponent(resolvedParams.news);
 
   const articles = await getArticles(category, resolvedSearch.q);
 
