@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
+export const dynamic = 'force-dynamic';
 
 interface NewsSource {
     id: string | null;

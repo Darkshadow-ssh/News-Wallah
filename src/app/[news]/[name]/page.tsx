@@ -2,6 +2,7 @@ import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/react/2
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { cache } from 'react'
+export const dynamic = 'force-dynamic';
 
 interface NewsSource {
   id: string | null;
