@@ -3,17 +3,12 @@ import { Users } from "@/app/lib/model/users";
 import mongoose from "mongoose";
 import { MONGO_DB } from "@/app/lib/db";
 import bcrypt from "bcrypt";
+import { generateOTP } from "@/app/lib/otp";
+import { sendOTPEmail } from "@/app/lib/email";
 
 async function connectDB() {
-  if (mongoose.connection.readyState >= 1) {
-    return;
-  }
-  try {
-    await mongoose.connect(MONGO_DB);
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    throw error;
-  }
+  if (mongoose.connection.readyState >= 1) return;
+  await mongoose.connect(MONGO_DB);
 }
 
 export async function POST(request: NextRequest) {
@@ -39,17 +34,26 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const otp = generateOTP(6);
+    const hashedOTP = await bcrypt.hash(otp, 10);
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
     const newUser = new Users({
       name,
       email,
       password: hashedPassword,
       provider: "credentials",
+      isVerified: false,
+      otp: hashedOTP,
+      otpExpiry,
     });
 
     await newUser.save();
 
+    await sendOTPEmail(email, otp, name);
+
     return NextResponse.json(
-      { message: "User created successfully" },
+      { message: "User created successfully. Please verify your email." },
       { status: 201 }
     );
   } catch (error) {
