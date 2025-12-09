@@ -41,8 +41,6 @@ export async function POST(request: NextRequest) {
     }
 
     user.isVerified = true;
-    user.otp = undefined;
-    user.otpExpiry = undefined;
     await user.save();
 
     return NextResponse.json(

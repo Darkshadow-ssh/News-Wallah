@@ -7,7 +7,6 @@ export function generateOTP(length: number = 6): string {
   for (let i = 0; i < length; i++) {
     otp += digits[Math.floor(Math.random() * 10)];
   }
-
   return otp;
 }
 

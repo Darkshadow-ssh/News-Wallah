@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     const otp = generateOTP(6);
     const hashedOTP = await bcrypt.hash(otp, 10);
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
     user.otp = hashedOTP;
     user.otpExpiry = otpExpiry;
